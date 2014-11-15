@@ -14,6 +14,7 @@ set nowritebackup
 set dir=~/.vimswap//,/var/tmp//,/tmp//
 set undofile
 set undodir=~/.vimundo/
+set cursorline
 
 " Pathogen plugins
 execute pathogen#infect()
