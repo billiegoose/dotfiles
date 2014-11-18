@@ -3,6 +3,7 @@
 	name = William Hilton
 [alias]
     lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -10
-
 [push]
 	default = simple
+[credential]
+	helper = cache --timeout=86400; remember passwords for 24 hours
