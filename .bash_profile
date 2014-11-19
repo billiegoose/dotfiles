@@ -12,6 +12,11 @@ for d in ~/bin/*/bin; do PATH="$PATH:$d"; done
 # VIM yeah.
 export EDITOR=vim
 
+# So fun fact. Ctrl+S freezes all terminal input and Ctrl+Q resumes input.
+# There is NO WAY that feature is ever useful. So turn it off so we can use
+# Ctrl+S to save in Vim
+stty -ixon
+
 # Automatically start tmux! (essentially replaces Bash as the default login s
 # http://stackoverflow.com/a/22821040/2168416
 tmux -2 attach &> /dev/null

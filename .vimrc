@@ -15,6 +15,15 @@ set dir=~/.vimswap//,/var/tmp//,/tmp//
 set undofile
 set undodir=~/.vimundo/
 set cursorline
+set hlsearch
+
+" Use CTRL-S for fast saving, also in Insert and Visual mode (taken from mswin.vim)
+noremap  <C-S>       :update<CR>
+vnoremap <C-S>  <C-C>:update<CR>
+inoremap <C-S>  <C-O>:update<CR>
+
+" Clear search highlighting by hitting Esc
+" nnoremap <Esc> :noh<CR><Esc>
 
 " Pathogen plugins
 execute pathogen#infect()
