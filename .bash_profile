@@ -20,9 +20,7 @@ alias less='less -r'
 # Ctrl+S to save in Vim
 stty -ixon
 
-# Automatically start tmux! (essentially replaces Bash as the default login s
-# http://stackoverflow.com/a/22821040/2168416
-tmux -2 attach &> /dev/null
-if [[ ! $TERM =~ screen ]]; then
-  exec tmux -2
-fi
+# Automatically start tmux! (essentially replaces Bash as the default login shell)
+# This is a very delicate operation.
+# 1) tmux command exists 2) this is an interactive shell 3) we are not inside tmux screen 4) we're definitely not inside tmux 5) replace this process with tmux (start or join session 'default')
+command -v tmux > /dev/null && [[ $- == *i* ]] && [[ ! $TERM =~ screen ]] && [ -z $TMUX ] && exec tmux new-session -A -s default
