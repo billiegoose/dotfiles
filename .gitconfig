@@ -6,8 +6,10 @@
   lgb = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -10 --branches
   ls = ls-files
   cm = commit -m
-  br = checkout -b
+  cb = checkout -b
   rb = branch -d
+  rbs = !git branch --merged develop | sed 's/^\\s*//' | grep '^feature' && echo 'Run git rbsf to delete'
+  rbsf = !git branch --merged develop | sed 's/^\\s*//' | grep '^feature' | xargs git branch -d
 [push]
 	default = simple
 [credential]
