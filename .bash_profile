@@ -9,11 +9,11 @@
 # all the binaries inside those repos to the PATH.
 for d in ~/bin/*/bin; do PATH="$PATH:$d"; done
 
-# VIM yeah.
-export EDITOR=vim
+# Textadept is the shit!
+export EDITOR=ta
 
 # Ubuntu aliases grep, ls, to the color-enabled versions... but not less?
-alias less='less -r'
+export LESS='-RFX'
 
 # So fun fact. Ctrl+S freezes all terminal input and Ctrl+Q resumes input.
 # There is NO WAY that feature is ever useful. So turn it off so we can use
