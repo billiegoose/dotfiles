@@ -16,11 +16,21 @@ local line_comment = '#' * l.nonnewline_esc^0
 local comment = token(l.COMMENT, block_comment + line_comment)
 
 -- Strings.
-local sq_str = l.delimited_range("'")
-local dq_str = l.delimited_range('"')
+local large_sq_str = "'''" * (l.any - "'''")^0 * "'''"
+local small_sq_str = l.delimited_range("'")
+local sq_str = large_sq_str + small_sq_str
+-- Interpolated strings.
+local inner_code = token(l.EMBEDDED, '#' * l.nested_pair('{','}'))
+local large_dq_str = l.token(l.STRING, '"""')
+                     * (inner_code + l.token(l.STRING, l.any - '"""'))^0
+                     * l.token(l.STRING, '"""')
+local small_dq_str = l.token(l.STRING, '"')
+                     * (inner_code + l.token(l.STRING, l.any -  '"' ))^0
+                     * l.token(l.STRING, '"')
+local dq_str = large_dq_str + small_dq_str
 local regex_str = l.last_char_includes('+-*%<>!=^&|?~:;,([{') *
                   l.delimited_range('/', true) * S('igm')^0
-local string = token(l.STRING, sq_str + dq_str) + token(l.REGEX, regex_str)
+local string = large_dq_str + small_dq_str + token(l.STRING, sq_str) + token(l.REGEX, regex_str)
 
 -- Numbers.
 local number = token(l.NUMBER, l.float + l.integer)
