@@ -14,3 +14,5 @@
 	default = simple
 [credential]
 	helper = cache --timeout=86400; remember passwords for 24 hours
+[color]
+	status = always
