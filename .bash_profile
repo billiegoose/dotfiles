@@ -9,6 +9,9 @@
 # all the binaries inside those repos to the PATH.
 for d in ~/bin/*/bin; do PATH="$PATH:$d"; done
 
+# Put shim install_basics.sh at end of PATH
+PATH="$PATH:$HOME/bin/.setup"
+
 # Textadept is the shit!
 export EDITOR=ta
 
