@@ -1,37 +1,41 @@
--- Import from tmux 'clipboard'. (E.g. on application start)
+-- Import from tmux 'clipboard' to textadept 'clipboard'.
 function import_tmux_clipboard(buffer)
   -- Import clipboard from tmux
   local p = spawn('tmux save-buffer -b 0 -')
   local text = p:read("*all")
-  buffer.copy_text(buffer, text)
+  if (text ~= nil) then
+    buffer.copy_text(buffer, text)
+  end
 end
 
--- Copy into tmux 'clipboard'
+-- Export from textadept 'clipboard' to to tmux 'clipboard'.
+function export_tmux_clipboard(ui)
+  -- Export clipboard to tmux
+  local p = spawn('tmux load-buffer -b 0 -')
+  p:write(ui.clipboard_text)
+  p:close()
+end
+
+-- Replace default Copy operation
 function copy_tmux(buffer)
   -- Replicate normal copy operation
   buffer.copy(buffer)
-  -- Export clipboard to tmux
-  local p = spawn('tmux load-buffer -b 0 -')
-  p:write(ui.clipboard_text)
-  p:close()
+  -- Then export clipboard to tmux
+  export_tmux_clipboard(ui)
 end
 
--- Cut into tmux 'clipboard'
+-- Replace default Cut operation
 function cut_tmux(buffer)
   -- Replicate normal cut operation
   buffer.cut(buffer)
-  -- Export clipboard to tmux
-  local p = spawn('tmux load-buffer -b 0 -')
-  p:write(ui.clipboard_text)
-  p:close()
+  -- Then export clipboard to tmux
+  export_tmux_clipboard(ui)
 end
 
--- Paste from tmux 'clipboard'
+-- Replace default Paste operation
 function paste_tmux(buffer)
   -- Import clipboard from tmux
-  local p = spawn('tmux save-buffer -b 0 -')
-  local text = p:read("*all")
-  buffer.copy_text(buffer, text)
+  import_tmux_clipboard(buffer)
   -- Replicate normal paste operation
   buffer.paste(buffer)
 end
