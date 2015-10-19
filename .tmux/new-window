@@ -1,0 +1,10 @@
+cd $TMUX_STARTDIR
+tmux new-window
+tmux split-window -h
+tmux split-window -h
+tmux resize-pane -t 0 -x 174
+tmux resize-pane -t 2 -x 175
+tmux split-window -h -t 2
+tmux split-window -h -t 1
+tmux split-window -h -t 0
+tmux select-pane -t 0
