@@ -1,10 +1,14 @@
+# Settings:
+# Font: Hack size 9
+# Screens: 1440 x 1680 x 1440
+# MobaXterm panel closed, on right side
 cd $TMUX_STARTDIR
 tmux new-window
-tmux split-window -h
-tmux split-window -h
-tmux resize-pane -t 0 -x 174
-tmux resize-pane -t 2 -x 175
-tmux split-window -h -t 2
+tmux split-window -h -t 0
+tmux split-window -h -t 1
+tmux resize-pane -t 0 -x 204
+tmux resize-pane -t 2 -x 197
+#tmux split-window -h -t 2
 tmux split-window -h -t 1
 tmux split-window -h -t 0
 tmux select-pane -t 0
