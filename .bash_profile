@@ -9,6 +9,11 @@
 # all the binaries inside those repos to the PATH.
 for d in ~/bin/*/bin; do PATH="$PATH:$d"; done
 
+# Search for optional packages to source
+[ -d ~/bin/oh-my-git ] && source ~/bin/oh-my-git/prompt.sh
+[ -d ~/bin/git-subrepo ] && source ~/bin/git-subrepo/.rc
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+
 # Put shim install_basics.sh at end of PATH
 PATH="$PATH:$HOME/bin/.setup"
 
