@@ -1,3 +1,13 @@
-~/bin/ack
-~/bin/ta
-.textadept/last_place/*
+*
+!.*
+# Temporary files
+.Xauthority
+.viminfo
+*.tmp
+# History files
+.*_history
+.lesshst
+# Binary files
+.rnd
+# Misc
+.fzf*
