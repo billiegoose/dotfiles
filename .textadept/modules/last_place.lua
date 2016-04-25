@@ -29,13 +29,15 @@ events.connect(events.FILE_BEFORE_SAVE, saveCursor)
 events.connect(events.QUIT, saveCursors)
 
 function restoreCursor(filename)
-  local save_path = getSavePath(filename)
-  local f = io.open(save_path, "r")
-  if f ~= nil then
-    buffer.selection_start    = f:read("*number")
-    buffer.selection_end      = f:read("*number")
-    buffer.first_visible_line = f:read("*number")
-    f:close()
+  if filename then
+    local save_path = getSavePath(filename)
+    local f = io.open(save_path, "r")
+    if f ~= nil then
+      buffer.selection_start    = f:read("*number")
+      buffer.selection_end      = f:read("*number")
+      buffer.first_visible_line = f:read("*number")
+      f:close()
+    end
   end
 end
 
