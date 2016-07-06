@@ -5,6 +5,9 @@
 # (which in turn calls .bashrc)
 . "$HOME/.profile"
 
+# Override prompt that .bashrc provides with a better one
+PS1='\D{%a %T} \u@\h:\w\n\$ '
+
 # I like to just git clone things into ~/bin, so I like to add
 # all the binaries inside those repos to the PATH.
 for d in ~/bin/*/bin; do PATH="$PATH:$d"; done
