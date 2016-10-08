@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = https://github.com/wmhilton/decshell
+	branch = master
+	commit = 17e91aa24eb8d1879ee493095e20ed21289e6260
+	parent = f22a0fb35261338a7fc20288a6d38cef2f5a1a02
+	cmdver = 0.3.0
