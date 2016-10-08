@@ -1,0 +1,17 @@
+#!/bin/bash
+# Elaborate hack to get around Bash's PATH caching. Redirects to the true rg
+if [[ "$(which rg)" == "$BASH_SOURCE" ]]
+then
+  echo "Installing rg..."
+  PATH="$PATH:~/.decshell"
+  . include dir file tar symlink
+  dir.is.present ~/bin
+  cd ~/bin
+  # Install rg
+  file.is.downloaded https://github.com/BurntSushi/ripgrep/releases/download/0.2.1/ripgrep-0.2.1-x86_64-unknown-linux-musl.tar.gz ripgrep.tar.gz
+  tar.is.extracted ripgrep.tar.gz .
+  symlink.is.present rg ripgrep-*/rg
+fi
+# Refresh bash's PATH cache.
+PATH="$PATH"
+exec rg "$@" <&0 >&1 >&2

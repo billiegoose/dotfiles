@@ -1,5 +1,6 @@
 *
 !.*
+!.install_basics/**
 # Temporary files
 .Xauthority
 .viminfo

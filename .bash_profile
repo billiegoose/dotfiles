@@ -18,7 +18,7 @@ for d in ~/bin/*/bin; do PATH="$PATH:$d"; done
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 # Put shim install_basics.sh at end of PATH
-PATH="$PATH:$HOME/bin/.setup"
+PATH="$PATH:$HOME/.install_basics"
 
 # Textadept is the shit!
 export EDITOR=ta

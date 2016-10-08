@@ -1,0 +1,17 @@
+#!/bin/bash
+# Elaborate hack to get around Bash's PATH caching. Redirects to the true ta
+if [[ "$(which ta)" == "$BASH_SOURCE" ]]
+then
+  echo "Installing ta..."
+  PATH="$PATH:~/.decshell"
+  . include dir file tar symlink
+  dir.is.present ~/bin
+  cd ~/bin
+  # Install ta
+  file.is.downloaded http://foicica.com/textadept/download/textadept_LATEST.x86_64.tgz textadept.tar.gz
+  tar.is.extracted textadept.tar.gz .
+  symlink.is.present ta textadept_*/textadeptjit-curses
+fi
+# Refresh bash's PATH cache
+PATH="$PATH"
+exec ta "$@" <&0 >&1 >&2
