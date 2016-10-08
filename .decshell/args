@@ -1,0 +1,23 @@
+#! /usr/bin/env bash
+set -eu
+
+function args.assert.none() {
+  if [[ $# -ne 0 ]]; then
+    echo "ERROR: Expected 0 arguments!"
+    return 2
+  fi
+}
+
+function args.assert.single() {
+  if [[ $# -ne 1 ]]; then
+    echo "ERROR: Expected 1 argument!"
+    return 2
+  fi
+}
+
+function args.assert.double() {
+  if [[ $# -ne 2 ]]; then
+    echo "ERROR: Expected 2 arguments!"
+    return 2
+  fi
+}

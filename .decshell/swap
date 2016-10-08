@@ -1,0 +1,76 @@
+#! /usr/bin/env bash
+#set -euo pipefail
+. include "args" "file"
+# Public API
+# swap.is.size size_str
+
+function swap_size() {
+  args.assert.single "$@"
+  FILE="$1"
+  cat /proc/swaps | awk 'BEGIN {s=0} $1 == "'"${FILE}"'" {s=$3} END {print s}'
+}
+
+function swap.assert.size() {
+  args.assert.single "$@"
+  SIZE="$1"
+  # This was more tortuous for me to write than for you to read. Many Bothans died to bring us this formula.
+  if [[ "$(numfmt --to=iec $(( $(swap_size /swapfile) * 1024)) )" == "$(numfmt --from=iec --to=iec ${SIZE})" ]] ; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+function swap.assert.enabled() {
+  grep --quiet '/swapfile' /proc/swaps
+}
+function swap.assert.disabled() {
+  ! grep --quiet '/swapfile' /proc/swaps
+}
+
+function swap.is.disabled() {
+  if swap.assert.enabled ; then
+    (set -x; swapoff /swapfile)
+  fi
+}
+
+function swap.is.enabled() {
+  if swap.assert.disabled ; then
+    (set -x; swapon /swapfile)
+  fi
+}
+
+function swap.is.size() {
+  args.assert.single  "$@"
+  SIZE="$1"
+  BYTES="$(numfmt --from=iec ${SIZE})"
+
+  file.is.present "/swapfile"
+  file.has.owner root:root /swapfile
+  file.has.perms 600 /swapfile
+
+  # Resize file as needed.
+  if ! file.assert.size "$SIZE" /swapfile ; then
+    swap.is.disabled
+    (set -x; fallocate -l "$BYTES" /swapfile)
+    if ! file.assert.size "$SIZE" /swapfile ; then
+      (set -x; truncate -s "$SIZE" /swapfile)
+    fi
+    (set -x; mkswap /swapfile)
+  fi
+
+  swap.is.enabled
+
+  if ! swap.assert.size "$SIZE" ; then
+    (set -x; swapoff /swapfile)
+    (set -x; swapon /swapfile)
+  fi
+  swap.assert.size "$SIZE"
+
+  file.has.line 'swapfile' '/swapfile   none       swap      sw                         0     0' /etc/fstab
+  file.has.line '^vm.swappiness' 'vm.swappiness = 0' /etc/sysctl.conf
+  if [[ "$(cat /proc/sys/vm/swappiness)" != "0" ]] ; then
+    echo 'echo 0 > /proc/sys/vm/swappiness'
+    (set -x; echo 0 > /proc/sys/vm/swappiness)
+  fi
+}

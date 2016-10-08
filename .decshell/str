@@ -1,0 +1,15 @@
+#! /usr/bin/env bash
+. include "args"
+# Public API
+# str.lowercase string
+# str.uppercase string
+
+function str.lowercase() {
+  args.assert.single "$@"
+  echo "$1" | tr '[:upper:]' '[:lower:]'
+}
+
+function str.uppercase() {
+  args.assert.single "$@"
+  echo "$1" | tr '[:lower:]' '[:upper:]'
+}

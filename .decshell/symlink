@@ -1,0 +1,13 @@
+#! /usr/bin/env bash
+#set -euo pipefail
+. include "args"
+# Public API
+
+function symlink.is.present() {
+  args.assert.double "$@"
+  local SOURCE="$1"
+  local DEST="$2"
+  if [[ $(readlink -se "$SOURCE") != $(readlink -se "$DEST") ]]; then
+    (set -x; ln -sf "$DEST" "$SOURCE")
+  fi
+}

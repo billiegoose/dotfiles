@@ -1,0 +1,35 @@
+#! /usr/bin/env bash
+#set -euo pipefail
+. include "args"
+# Public API
+# file.is.present $file_name
+# file.is.absent $file_name
+# file.has.perms $perms $file_name
+# file.has.owner $owner:group $filename
+# file.assert.size $size $file_name
+
+function dir.assert.present() {
+  args.assert.single "$@"
+  test -d "$1"
+}
+function dir.assert.absent() {
+  args.assert.single  "$@"
+  ! dir.assert.present "$1"
+}
+
+function dir.is.present() {
+  args.assert.single  "$@"
+  local NAME="$1"
+  if dir.assert.absent "$NAME" ; then
+    (set -x; mkdir -p "$NAME")
+  fi
+  dir.assert.present "$NAME"
+}
+function dir.is.absent() {
+  args.assert.single  "$@"
+  local NAME="$1"
+  if dir.assert.present "$NAME" ; then
+    (set -x; rm -rf "$NAME")
+  fi
+  dir.assert.absent "$DIR"
+}

@@ -1,0 +1,11 @@
+#! /usr/bin/env bash
+#set -euo pipefail
+. include "args"
+# Public API
+
+function tar.is.extracted() {
+  args.assert.double "$@"
+  local SOURCE="$1"
+  local DEST="$2"
+  tar xf "$SOURCE" -C "$DEST"
+}

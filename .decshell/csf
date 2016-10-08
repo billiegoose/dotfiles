@@ -1,0 +1,46 @@
+#! /usr/bin/env bash
+#set -euo pipefail
+. include "args" "file" "tar" "apt" "str" "bool"
+# Public API
+
+function csf.assert.installed() {
+  which csf &>/dev/null
+}
+function install_csf() {
+  apt.is.installed libwww-perl
+  apt.is.installed liblwp-protocol-https-perl
+  file.is.downloaded https://download.configserver.com/csf.tgz /tmp/csf.tgz
+  tar.is.extracted /tmp/csf.tgz /tmp
+  cd /tmp/csf
+  sh install.sh
+  perl /usr/local/csf/bin/csftest.pl
+  file.has.line '^TESTING\b' 'TESTING = "0"' /etc/csf/csf.conf
+}
+function csf.is.installed() {
+  if ! csf.assert.installed ; then
+    install_csf
+  fi
+  csf.assert.installed
+}
+function csf.ports.allowed() {
+  args.assert.single  "$@"
+  local PORTS="$1"
+  file.has.line '^TCP_IN\b' 'TCP_IN = "'"$PORTS"'"' /etc/csf/csf.conf
+  file.has.line '^UDP_IN\b' 'UDP_IN = "'"$PORTS"'"' /etc/csf/csf.conf
+  file.has.line '^TCP6_IN\b' 'TCP6_IN = "'"$PORTS"'"' /etc/csf/csf.conf
+  file.has.line '^UDP6_IN\b' 'UDP6_IN = "'"$PORTS"'"' /etc/csf/csf.conf
+  file.has.line '^TCP_OUT\b' 'TCP_OUT = "'"$PORTS"'"' /etc/csf/csf.conf
+  file.has.line '^UDP_OUT\b' 'UDP_OUT = "'"$PORTS"'"' /etc/csf/csf.conf
+  file.has.line '^TCP6_OUT\b' 'TCP6_OUT = "'"$PORTS"'"' /etc/csf/csf.conf
+  file.has.line '^UDP6_OUT\b' 'UDP6_OUT = "'"$PORTS"'"' /etc/csf/csf.conf
+
+}
+function csf.ping.set() {
+  args.assert.single "$@"
+  bool.assert.bool "$1"
+  if bool.assert.truthy "$1" ; then
+    file.has.line '^ICMP_IN\b' 'ICMP_IN = "1"' /etc/csf/csf.conf
+  elif bool.assert.falsey "$1" ; then
+    file.has.line '^ICMP_IN\b' 'ICMP_IN = "0"' /etc/csf/csf.conf
+  fi
+}

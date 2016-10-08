@@ -1,0 +1,13 @@
+#! /usr/bin/env bash
+
+function github.download() {
+  local USER="$1"
+  local REPO="$2"
+  local REF="$3"
+  local LOCATION="$4"
+  rm -rf "$LOCATION"
+  mkdir -p "$LOCATION"
+  cd "$LOCATION"
+  curl -sSH "Authorization: token $GITHUB_TOKEN" -L "https://api.github.com/repos/$USER/$REPO/tarball/$REF" | tar -xz
+  mv */* .
+}

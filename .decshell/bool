@@ -1,0 +1,28 @@
+#! /usr/bin/env bash
+#set -euo pipefail
+. include "args"
+# Public API
+
+function bool.assert.bool() {
+  args.assert.single "$@"
+  if bool.assert.truthy "$1" || bool.assert.falsey "$1" ; then
+    return 0;
+  else
+    echo "ERROR: $1 is not boolean";
+    return 1;
+  fi
+}
+function bool.assert.truthy() {
+  args.assert.single "$@"
+  case "$(str.lowercase "$1")" in
+  '1' | 'on'  | 'true'  | 'yes' | 'enable' | 'enabled' ) return 0 ;;
+  * ) return 1 ;;
+  esac
+}
+function bool.assert.falsey() {
+  args.assert.single "$@"
+  case "$(str.lowercase "$1")" in
+  '0' | 'off' | 'false' | 'no' | 'disable' | 'disabled' ) return 0 ;;
+  * ) return 1 ;;
+  esac
+}

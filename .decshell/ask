@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+ask.confirm () {
+    read -r -n 1 -p "${1:-Are you sure? [y/N]} " response
+    case $response in
+        [yY]) true ;;
+        *) false ;;
+    esac
+}
+
+ask.select() {
+    PS3="Select: "
+    select var in $@
+    do
+        echo "$var"
+        break
+    done
+}

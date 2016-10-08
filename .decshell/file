@@ -1,0 +1,114 @@
+#! /usr/bin/env bash
+#set -euo pipefail
+. include "args"
+# Public API
+# file.is.present $file_name
+# file.is.absent $file_name
+# file.has.perms $perms $file_name
+# file.has.owner $owner:group $filename
+# file.assert.size $size $file_name
+
+function file.assert.present() {
+  args.assert.single "$@"
+  test -f "$1"
+}
+function file.assert.absent() {
+  args.assert.single  "$@"
+  ! file.assert.present "$1"
+}
+function file.assert.perms() {
+  args.assert.double "$@"
+  test $(stat --format '%a' "$2") == "$1"
+}
+function file.assert.owner() {
+  args.assert.double "$@"
+  test $(stat --format '%U:%G' "$2") == "$1"
+}
+function file.assert.line() {
+  args.assert.double "$@"
+  LINE="$1"
+  FILE="$2"
+  grep --fixed-strings --line-regexp --quiet "$LINE" "$FILE"
+}
+function file.assert.line_match() {
+  args.assert.double "$@"
+  MATCH="$1"
+  FILE="$2"
+  grep --quiet "$MATCH" "$FILE"
+}
+function file.assert.size() {
+  args.assert.double "$@"
+  SIZE="$1"
+  NAME="$2"
+  if file.assert.present "${NAME}" ; then
+    test "$(stat --format='%s' ${NAME})" == "$(numfmt --from=iec ${SIZE})"
+  else
+    return 1
+  fi
+}
+
+function file.is.present() {
+  args.assert.single  "$@"
+  file_name="$1"
+  if file.assert.absent "$file_name" ; then
+    if [[ -h "$file_name" ]]; then
+      (set -x; unlink "$file_name")
+    fi
+    (set -x; touch "$file_name")
+  fi
+  file.assert.present "$file_name"
+}
+function file.is.absent() {
+  args.assert.single  "$@"
+  file_name="$1"
+  if file.assert.present "$file_name" ; then
+    (set -x; rm -f "$file_name")
+  fi
+  file.assert.absent "$file_name"
+}
+function file.is.downloaded() {
+  args.assert.double "$@"
+  local URL="$1"
+  local FILE="$2"
+  if ! file.assert.present "$FILE" ; then
+    (set -x; wget -O "$FILE" --quiet "$URL")
+  fi
+  file.assert.present "$FILE"
+}
+function file.has.perms() {
+  if ! file.assert.perms "$1" "$2" ; then
+    (set -x; chmod "$1" "$2")
+  fi
+  file.assert.perms "$1" "$2"
+}
+function file.has.owner() {
+  args.assert.double "$@"
+  if ! file.assert.owner "$1" "$2" ; then
+    (set -x; chown "$1" "$2")
+  fi
+  file.assert.owner "$1" "$2"
+}
+function file.has.line() {
+  MATCH="$1"
+  LINE="$2"
+  FILE="$3"
+  if file.assert.line "$LINE" "$FILE" ; then
+    return 0;
+  fi
+  # TODO, assert that it only matches ONE line in the file.
+  if file.assert.line_match "$MATCH" "$FILE" ; then
+    (set -x; sed -i "/$MATCH/ c $LINE" "$FILE")
+  else
+    (set -x; echo "$LINE" >> "$FILE")
+  fi
+  file.assert.line "$LINE" "$FILE"
+}
+function file.has.contents() {
+  args.assert.single "$@"
+  local FILE="$1"
+  local CONTENTS=$(cat)
+  file.is.present "$FILE"
+  if ! diff - "$FILE" <<< "$CONTENTS" >/dev/null; then
+    (set -x; cat <<< "$CONTENTS" > "$FILE")
+  fi
+}
