@@ -1,0 +1,19 @@
+#!/bin/bash
+NAME="git-subrepo"
+# Elaborate hack to get around Bash's PATH caching. Redirects to the true $NAME
+[[ -e ~/bin/git-subrepo/.rc ]] && source ~/bin/git-subrepo/.rc
+if [[ "$(which $NAME)" == "$BASH_SOURCE" ]]
+then
+  echo "Installing $NAME..."
+  PATH="$PATH:~/.decshell"
+  . include dir file tar symlink
+  dir.is.present ~/bin
+  cd ~/bin
+  # Install $NAME
+  git clone https://github.com/ingydotnet/git-subrepo
+fi
+# Refresh bash's PATH cache
+PATH="$PATH"
+set +u
+source ~/bin/git-subrepo/.rc
+exec $NAME "$@" <&0 >&1 >&2
