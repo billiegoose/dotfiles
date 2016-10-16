@@ -1,6 +1,7 @@
 *
 !.*
 !.decshell/**
+!.oh-my-git/**
 !.install_basics/**
 # Temporary files
 .Xauthority
