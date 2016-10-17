@@ -8,7 +8,7 @@
 # Override prompt that .bashrc provides with a better one
 #PS1='\D{%Y-%m-%d %H:%M:%S} \u@\h \w\n\$ '
 PS1=''
-source .mightyprompt
+source ~/.mightyprompt
 # Add my git prompt
 source ~/.oh-my-git/prompt.sh
 function uber_prompt() {
