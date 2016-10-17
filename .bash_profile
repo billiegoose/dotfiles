@@ -6,14 +6,22 @@
 . "$HOME/.profile"
 
 # Override prompt that .bashrc provides with a better one
-PS1='\D{%a %T} \u@\h:\w\n\$ '
+#PS1='\D{%Y-%m-%d %H:%M:%S} \u@\h \w\n\$ '
+PS1=''
+source .mightyprompt
+# Add my git prompt
+source ~/.oh-my-git/prompt.sh
+function uber_prompt() {
+   PS1="$(mighty_prompt) $(build_prompt)"
+   PS1+='$ '
+}
+PROMPT_COMMAND="uber_prompt"
 
 # I like to just git clone things into ~/bin, so I like to add
 # all the binaries inside those repos to the PATH.
 for d in ~/bin/*/bin; do PATH="$PATH:$d"; done
 
 # Search for optional packages to source
-[ -d ~/bin/oh-my-git ] && source ~/bin/oh-my-git/prompt.sh
 [ -d ~/bin/git-subrepo ] && source ~/bin/git-subrepo/.rc
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
