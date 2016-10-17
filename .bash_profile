@@ -1,21 +1,15 @@
 #!/bin/bash
 # ~/.bash_profile - by William Hilton
 
-# Assuming this is an Ubuntu System, the defaults are in .profile
-# (which in turn calls .bashrc)
-. "$HOME/.profile"
+# Ubuntu does some nonsense with .bash_profile loading .profile which sees if
+# the term is bash and if so loads .bashrc.
+# I guarantee if I'm loading .bash_profile, I want to load .bashrc if it exists
+if [ -f "$HOME/.bashrc" ]; then
+    . "$HOME/.bashrc"
+fi
 
-# Override prompt that .bashrc provides with a better one
-#PS1='\D{%Y-%m-%d %H:%M:%S} \u@\h \w\n\$ '
-PS1=''
-source ~/.mightyprompt
-# Add my git prompt
-source ~/.oh-my-git/prompt.sh
-function uber_prompt() {
-   PS1="$(mighty_prompt) $(build_prompt)"
-   PS1+='$ '
-}
-PROMPT_COMMAND="uber_prompt"
+# set PATH so it includes user's private bin directories
+PATH="$HOME/bin:$HOME/.local/bin:$PATH"
 
 # I like to just git clone things into ~/bin, so I like to add
 # all the binaries inside those repos to the PATH.
@@ -38,6 +32,20 @@ export LESS='-RFX'
 # There is NO WAY that feature is ever useful. So turn it off so we can use
 # Ctrl+S to save in Vim
 stty -ixon
+
+# Override prompt that .bashrc provides with a better one
+# Here is a "dumb" better one (sets PS1 to a more useful string)
+# PS1='\D{%Y-%m-%d %H:%M:%S} \u@\h \w\n\$ '
+# Here is a "fancy" better one (abuses the shit out of PROMPT_COMMAND to do magic)
+PS1=''
+source ~/.mightyprompt
+# Add my git prompt
+source ~/.oh-my-git/prompt.sh
+function uber_prompt() {
+   PS1="$(mighty_prompt) $(build_prompt)"
+   PS1+='$ '
+}
+PROMPT_COMMAND="uber_prompt"
 
 # Automatically start tmux! (essentially replaces Bash as the default login shell)
 # This is a very delicate operation.
