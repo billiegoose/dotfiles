@@ -44,6 +44,7 @@ source ~/.oh-my-git/prompt.sh
 function uber_prompt() {
    PS1="$(mighty_prompt) $(build_prompt)"
    PS1+='$ '
+   unset timer_start
 }
 PROMPT_COMMAND="uber_prompt"
 
