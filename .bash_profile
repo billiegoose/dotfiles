@@ -42,9 +42,10 @@ source ~/.mightyprompt
 # Add my git prompt
 source ~/.oh-my-git/prompt.sh
 function uber_prompt() {
-   PS1="$(mighty_prompt) $(build_prompt)"
-   PS1+='$ '
-   unset timer_start
+  MIGHTY_PROMPT="$(mighty_prompt)"
+  PS1="${MIGHTY_PROMPT}\n> "
+  #build_prompt & disown
+  unset timer_start
 }
 PROMPT_COMMAND="uber_prompt"
 
