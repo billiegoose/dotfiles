@@ -1,0 +1,17 @@
+#!/bin/bash
+# Elaborate hack to get around Bash's PATH caching. Redirects to the true g
+if [[ "$(which g)" == "$BASH_SOURCE" ]]
+then
+  echo "Installing g..."
+  PATH="$PATH:~/.decshell"
+  . include dir file tar symlink
+  dir.is.present ~/bin
+  cd ~/bin
+  # Install g
+  git clone https://github.com/wmhilton/gitredux
+fi
+# Reload all the ~/bin/*/bin paths
+source ~/.bash_profile
+# Refresh bash's PATH cache.
+PATH="$PATH"
+exec g "$@" <&0 >&1 >&2
