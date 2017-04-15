@@ -42,12 +42,17 @@ source ~/.mightyprompt
 # Add my git prompt
 source ~/.oh-my-git/prompt.sh
 function uber_prompt() {
-  MIGHTY_PROMPT="$(mighty_prompt)"
+  MIGHTY_PROMPT="$(mighty_prompt) ($(git rev-parse --abbrev-ref HEAD 2>/dev/null))"
   PS1="${MIGHTY_PROMPT}\n> "
   #build_prompt & disown
   unset timer_start
 }
 PROMPT_COMMAND="uber_prompt"
+
+# Update window title to be the original working directory
+if which ConEmuC &>/dev/null; then
+  ConEmuC -GuiMacro Rename 0 "$(basename $(pwd))" >/dev/null
+fi
 
 # Automatically start tmux! (essentially replaces Bash as the default login shell)
 # This is a very delicate operation.

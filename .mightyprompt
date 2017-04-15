@@ -56,14 +56,18 @@ mighty_prompt () {
     timer_stop
     prompt+="($timer_show)$Reset $Yellow[\D{%Y-%m-%d %H:%M:%S}]$Reset "
 
-    # If root, just print the host in red. Otherwise, print the current user
-    # and host in green.
-    if [[ $EUID == 0 ]]; then
-        prompt+="$Red\\u@\\h$Reset "
-    else
-        prompt+="\\u@\\h "
+    if [[ -z "$RECORDING" ]]
+    then
+        # If root, just print the host in red. Otherwise, print the current user
+        # and host in green.
+        if [[ $EUID == 0 ]]; then
+            prompt+="$Red\\u@\\h$Reset "
+        else
+            prompt+="\\u@\\h "
+        fi
+        prompt+="$(dirname $PWD)/"
     fi
-    prompt+="$(dirname $PWD)/$Inverted\\W"
+    prompt+="$Inverted\\W"
     prompt+="$Reset"
     echo "$prompt"
 }
