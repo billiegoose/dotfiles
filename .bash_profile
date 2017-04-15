@@ -4,6 +4,13 @@
 # Ubuntu does some nonsense with .bash_profile loading .profile which sees if
 # the term is bash and if so loads .bashrc.
 # I guarantee if I'm loading .bash_profile, I want to load .bashrc if it exists
+# On Bash for Windows, it appears it loads .bashrc first.
+# Anyway, we need to make sure THIS file doesn't run recursively.
+if [ "$IFDEF_BASH_PROFILE" == 'TRUE' ]; then
+  unset IFDEF_BASH_PROFILE
+  return
+fi
+export IFDEF_BASH_PROFILE='TRUE'
 if [ -f "$HOME/.bashrc" ]; then
     . "$HOME/.bashrc"
 fi
