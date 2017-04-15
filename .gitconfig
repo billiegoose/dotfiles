@@ -1,15 +1,9 @@
 [user]
 	email = wmhilton@gmail.com
 	name = William Hilton
+	signingkey = 9609B8A5928BA6B9
 [alias]
   lg = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -10
-  lgb = log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit -10 --branches --remotes
-  ls = ls-files
-  cm = commit -m
-  cb = checkout -b
-  rb = branch -d
-  rbs = !git branch --merged develop | sed 's/^\\s*//' | grep '^feature' && echo 'Run git rbsf to delete'
-  rbsf = !git branch --merged develop | sed 's/^\\s*//' | grep '^feature' | xargs git branch -d
 [push]
 	default = simple
 [credential]
@@ -18,3 +12,9 @@
 	status = always
 [github]
 	user = wmhilton
+[gc]
+	auto = 256
+[commit]
+	gpgsign = true
+[transfer]
+	fsckObjects = true
